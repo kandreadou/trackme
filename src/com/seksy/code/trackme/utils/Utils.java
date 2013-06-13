@@ -14,6 +14,7 @@ public class Utils {
            && (current.getTime() - previous.getTime() <= TIME_THRESHOLD);
   }
 
+  /** Calculates the velocity between two locations */
   private static float calcVelocity(Location previous, Location current) {
     float[] results = new float[1];
     Location.distanceBetween(previous.getLatitude(),
@@ -25,6 +26,7 @@ public class Utils {
     return velocity;
   }
 
+  /** Checks if the difference in accuracy between two points is acceptable */
   private static boolean isAccuracyDiffAcceptable(Location previous, Location current) {
     float previousAccur = previous.getAccuracy();
     float currentAccur = current.getAccuracy();
