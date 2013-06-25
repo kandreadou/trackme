@@ -6,25 +6,35 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 
 public class LocService extends Service implements LocationListener {
 
-  private static final int MIN_TIME     = 1000 * 60 * 2; //two minutes
-  private static final int MIN_DISTANCE = 500;          // 500 meters
-  public LocationManager   locationManager;
+  private static final int MIN_TIME     = 5000; //two minutes
+  private static final int MIN_DISTANCE = 500; // 500 meters
+  private LocationManager  locationManager;
+  private TrackingListener listener;
+
+  public void setTrackingListener(TrackingListener listener) {
+    this.listener = listener;
+  }
+
+  // Binder given to clients
+  private final IBinder mBinder = new LocalBinder();
 
   @Override
   public IBinder onBind(Intent intent) {
-    return null;
+    startService(intent);
+    return mBinder;
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     return super.onStartCommand(intent, flags, startId);
   }
 
@@ -42,7 +52,10 @@ public class LocService extends Service implements LocationListener {
 
   @Override
   public void onLocationChanged(Location location) {
-    // TODO Auto-generated method stub
+    //TODO: Filter the location first
+    if (listener != null) {
+      listener.onNewTracking(location);
+    }
 
   }
 
@@ -64,4 +77,17 @@ public class LocService extends Service implements LocationListener {
 
   }
 
+  /////////////////////////////////////////////
+  //////////// Inner classes 
+  //////////////////////////////////////////
+
+  public interface TrackingListener {
+    public void onNewTracking(Location loc);
+  }
+
+  public class LocalBinder extends Binder {
+    public LocService getService() {
+      return LocService.this;
+    }
+  }
 }
