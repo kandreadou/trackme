@@ -48,7 +48,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.seksy.code.trackme.services.LocService"/>
+
+        <service android:name="com.seksy.code.trackme.services.LocService" />
+
+        <provider
+            android:name="com.seksy.code.trackme.db.LocationProvider"
+            android:authorities="com.seksy.code.trackme" />
     </application>
 
 </manifest>

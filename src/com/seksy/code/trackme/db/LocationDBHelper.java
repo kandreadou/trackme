@@ -2,15 +2,14 @@ package com.seksy.code.trackme.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class LocationDBHelper extends SQLiteOpenHelper {
 
   private final static String DATABASE_NAME    = "location.db";
-  private final static String DATABASE_TABLE   = "LocationPoints";
+
   private final static int    DATABASE_VERSION = 1;
-  private final static String DATABASE_CREATE  = "create table " + DATABASE_TABLE
+  private final static String DATABASE_CREATE  = "create table " + DBConstants.DATABASE_TABLE
                                                  + " ("
                                                  + DBConstants.ID
                                                  + " integer primary key autoincrement, "
@@ -21,8 +20,8 @@ public class LocationDBHelper extends SQLiteOpenHelper {
                                                  + DBConstants.TIME
                                                  + " int);";
 
-  public LocationDBHelper(Context context, CursorFactory factory) {
-    super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+  public LocationDBHelper(Context context) {
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
   @Override
@@ -33,7 +32,7 @@ public class LocationDBHelper extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     // drop the old table
-    db.execSQL("DROP TABLE IF IT EXISTS " + DATABASE_TABLE);
+    db.execSQL("DROP TABLE IF IT EXISTS " + DBConstants.DATABASE_TABLE);
     // recreate it
     onCreate(db);
   }
