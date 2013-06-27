@@ -1,14 +1,8 @@
 package com.seksy.code.trackme;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,14 +13,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.seksy.code.trackme.services.LocService;
-import com.seksy.code.trackme.services.LocService.LocalBinder;
-import com.seksy.code.trackme.services.LocService.TrackingListener;
 
-public class MainActivity extends Activity implements TrackingListener {
+public class MainActivity extends AbstractBoundActivity {
 
   private GoogleMap       mMap;
-  private boolean         mBound = false;
   // a polyline to draw on the map
   private PolylineOptions poly;
 
@@ -42,25 +32,6 @@ public class MainActivity extends Activity implements TrackingListener {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.activity_main, menu);
     return true;
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-    // Bind to LocService
-    final Intent intent = new Intent(this, LocService.class);
-    bindService(intent, this.mConnection, Context.BIND_AUTO_CREATE);
-  }
-
-  @Override
-  public void onStop() {
-
-    // Unbind from the service
-    if (this.mBound) {
-      unbindService(this.mConnection);
-      this.mBound = false;
-    }
-    super.onStop();
   }
 
   private void updateCamera(LatLng latLang) {
@@ -106,27 +77,4 @@ public class MainActivity extends Activity implements TrackingListener {
     //addMarker(loc);
     addPointToPolyline(loc);
   }
-
-  /** Defines callbacks for service binding, passed to bindService() */
-  private final ServiceConnection mConnection = new ServiceConnection() {
-
-                                                LocalBinder binder;
-
-                                                @Override
-                                                public void onServiceConnected(final ComponentName className,
-                                                                               final IBinder service) {
-                                                  // We've bound to LocService, cast the IBinder and get
-                                                  // P4SPushService instance
-                                                  binder = (LocalBinder) service;
-                                                  binder.getService().setTrackingListener(MainActivity.this);
-                                                  mBound = true;
-                                                }
-
-                                                @Override
-                                                public void onServiceDisconnected(final ComponentName arg0) {
-                                                  mBound = false;
-                                                  binder.getService().setTrackingListener(null);
-                                                }
-                                              };
-
 }
