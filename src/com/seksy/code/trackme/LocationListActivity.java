@@ -102,6 +102,8 @@ public class LocationListActivity extends AbstractBoundActivity implements Loade
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    // This seems to be necessary to get notifications from the ContentProvider
+    cursor.setNotificationUri(getContentResolver(), LocationProvider.CONTENT_URI);
     if (adapter == null) {
       adapter = new LocationAdapter(this, cursor);
       list.setAdapter(adapter);
