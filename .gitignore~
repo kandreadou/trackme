@@ -18,6 +18,3 @@ local.properties
 # Eclipse project files
 .classpath
 .project
-
-# Specific config files
-config.xml
