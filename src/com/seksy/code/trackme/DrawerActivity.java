@@ -2,13 +2,15 @@ package com.seksy.code.trackme;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentValues;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.maps.MapFragment;
+import com.seksy.code.trackme.db.DBConstants;
+import com.seksy.code.trackme.db.LocationProvider;
 
 public class DrawerActivity extends AbstractBoundActivity {
 
@@ -30,17 +32,32 @@ public class DrawerActivity extends AbstractBoundActivity {
 
   @Override
   public void onNewTracking(Location loc) {
-    if (currentFragment == null) {
-      currentFragment = getFragmentManager().findFragmentById(R.id.content_frame);
-    }
-    if (currentFragment != null) {
-      if (currentFragment instanceof MapFragment) {
-        ((MyMapFragment) currentFragment).addPointToPolyline(loc);
-      } else {
-        ((MyListFragment) currentFragment).saveLocation(loc);
-      }
-    }
+    //    if (currentFragment == null) {
+    //      currentFragment = getFragmentManager().findFragmentById(R.id.content_frame);
+    //    }
+    //    if (currentFragment != null) {
+    //      if (currentFragment instanceof MapFragment) {
+    //        ((MyMapFragment) currentFragment).addPointToPolyline(loc);
+    //      } else {
+    //        ((MyListFragment) currentFragment).saveLocation(loc);
+    //      }
+    //    }
 
+    saveLocation(loc);
+
+  }
+
+  /**
+   * Saves a location to the DB
+   * 
+   * @param loc
+   */
+  public void saveLocation(Location loc) {
+    ContentValues values = new ContentValues();
+    values.put(DBConstants.LAT, loc.getLatitude());
+    values.put(DBConstants.LONG, loc.getLongitude());
+    values.put(DBConstants.TIME, System.currentTimeMillis());
+    getContentResolver().insert(LocationProvider.CONTENT_URI, values);
   }
 
   private void showMap() {

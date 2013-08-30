@@ -2,12 +2,10 @@ package com.seksy.code.trackme;
 
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +18,8 @@ import com.seksy.code.trackme.db.DBConstants;
 import com.seksy.code.trackme.db.LocationProvider;
 
 public class MyListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
-  private CursorAdapter         adapter;
-  private ListView              list;
-
-  private final static String[] projection = new String[] {
-      DBConstants.ID, DBConstants.LAT, DBConstants.LONG, DBConstants.TIME
-                                           };
+  private CursorAdapter adapter;
+  private ListView      list;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,19 +32,6 @@ public class MyListFragment extends ListFragment implements LoaderCallbacks<Curs
   public void onResume() {
     super.onResume();
     getActivity().getLoaderManager().initLoader(0, null, this);
-  }
-
-  /**
-   * Saves a location to the DB
-   * 
-   * @param loc
-   */
-  public void saveLocation(Location loc) {
-    ContentValues values = new ContentValues();
-    values.put(DBConstants.LAT, loc.getLatitude());
-    values.put(DBConstants.LONG, loc.getLongitude());
-    values.put(DBConstants.TIME, System.currentTimeMillis());
-    getActivity().getContentResolver().insert(LocationProvider.CONTENT_URI, values);
   }
 
   //////////////////////////////////////////////
@@ -92,7 +73,12 @@ public class MyListFragment extends ListFragment implements LoaderCallbacks<Curs
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-    return new CursorLoader(getActivity(), LocationProvider.CONTENT_URI, projection, null, null, null);
+    return new CursorLoader(getActivity(),
+                            LocationProvider.CONTENT_URI,
+                            DBConstants.PROJECTION,
+                            null,
+                            null,
+                            null);
   }
 
   @Override

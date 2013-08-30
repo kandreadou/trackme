@@ -73,7 +73,7 @@ public class LocationProvider extends ContentProvider {
     if (id > -1) {
       Uri insertedId = ContentUris.withAppendedId(CONTENT_URI, id);
       // Notify the observers of the change in the dataset
-      getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+      getContext().getContentResolver().notifyChange(insertedId, null);
       return insertedId;
     }
     return null;
