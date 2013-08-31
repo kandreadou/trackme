@@ -34,6 +34,12 @@ public class MyListFragment extends ListFragment implements LoaderCallbacks<Curs
     getActivity().getLoaderManager().initLoader(0, null, this);
   }
 
+  @Override
+  public void onPause() {
+    getActivity().getLoaderManager().destroyLoader(0);
+    super.onPause();
+  }
+
   //////////////////////////////////////////////
   /////////////// Cursor adapter     ///////////
   /////////////////////////////////////////////

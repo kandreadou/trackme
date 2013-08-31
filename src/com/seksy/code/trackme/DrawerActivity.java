@@ -14,8 +14,10 @@ import com.seksy.code.trackme.db.LocationProvider;
 
 public class DrawerActivity extends AbstractBoundActivity {
 
+  private final static String FRAGMENT_TAG_MAP    = "TAG_MAP";
+  private final static String FRAGMENT_TAG_LIST   = "TAG_LIST";
+
   private DrawerClickListener drawerClickListener = new DrawerClickListener();
-  private Fragment            currentFragment;
   private DrawerLayout        mDrawerLayout;
   private LinearLayout        mLeftDrawer;
 
@@ -28,23 +30,13 @@ public class DrawerActivity extends AbstractBoundActivity {
     /* register the drawer items to receive click events */
     findViewById(R.id.map).setOnClickListener(drawerClickListener);
     findViewById(R.id.list).setOnClickListener(drawerClickListener);
+    /* show map by default at the beginning */
+    showMap();
   }
 
   @Override
   public void onNewTracking(Location loc) {
-    //    if (currentFragment == null) {
-    //      currentFragment = getFragmentManager().findFragmentById(R.id.content_frame);
-    //    }
-    //    if (currentFragment != null) {
-    //      if (currentFragment instanceof MapFragment) {
-    //        ((MyMapFragment) currentFragment).addPointToPolyline(loc);
-    //      } else {
-    //        ((MyListFragment) currentFragment).saveLocation(loc);
-    //      }
-    //    }
-
     saveLocation(loc);
-
   }
 
   /**
@@ -61,15 +53,21 @@ public class DrawerActivity extends AbstractBoundActivity {
   }
 
   private void showMap() {
-    currentFragment = new MyMapFragment();
-    FragmentManager fragmentManager = getFragmentManager();
-    fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment).commit();
+    FragmentManager fm = getFragmentManager();
+    Fragment current = fm.findFragmentByTag(FRAGMENT_TAG_MAP);
+    if (current == null) {
+      current = new MyMapFragment();
+    }
+    fm.beginTransaction().replace(R.id.content_frame, current, FRAGMENT_TAG_MAP).commit();
   }
 
   private void showList() {
-    currentFragment = new MyListFragment();
-    FragmentManager fragmentManager = getFragmentManager();
-    fragmentManager.beginTransaction().replace(R.id.content_frame, currentFragment).commit();
+    FragmentManager fm = getFragmentManager();
+    Fragment current = fm.findFragmentByTag(FRAGMENT_TAG_LIST);
+    if (current == null) {
+      current = new MyListFragment();
+    }
+    fm.beginTransaction().replace(R.id.content_frame, current, FRAGMENT_TAG_LIST).commit();
   }
 
   /**
