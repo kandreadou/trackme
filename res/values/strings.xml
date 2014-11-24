@@ -4,5 +4,6 @@
     <string name="app_name">trackme</string>
     <string name="menu_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="api_key">AIzaSyDx2SoPbIltIZzDsBE8---oFoUhvtz8quk</string>
 
 </resources>
