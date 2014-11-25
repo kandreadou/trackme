@@ -7,5 +7,7 @@
     <string name="api_key">AIzaSyDx2SoPbIltIZzDsBE8---oFoUhvtz8quk</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="title_activity_material">MaterialActivity</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
